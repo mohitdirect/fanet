@@ -16,6 +16,7 @@ NS_LOG_COMPONENT_DEFINE("CrProtocols");
 namespace myfanet {
 
 // CR-ED: Reactive energy-detection loop
+// IMPROVED: Now includes phase transition like PGH
 void CrEdLoop()
 {
     if (actionTaken) return;
@@ -23,12 +24,29 @@ void CrEdLoop()
         ns3::Simulator::Schedule(ns3::Seconds(0.1), &CrEdLoop);
         return;
     }
+    
+    // Check if any node detects jammer within range
     double minDist = 1e9;
+    uint32_t closestNode = 0;
     for (uint32_t i = 0; i < nNodes; ++i) {
-        minDist = std::min(minDist, GetDistance(fanetNodes.Get(i), puNode));
+        double dist = GetDistance(fanetNodes.Get(i), puNode);
+        if (dist < minDist) {
+            minDist = dist;
+            closestNode = i;
+        }
     }
+    
     if (minDist < crEdDetectRange) {
-        NS_LOG_UNCOND(ns3::Simulator::Now().GetSeconds() << "s: [CR-ED] Reactive detection at " << minDist << " m");
+        // Transition to jamming phase BEFORE handoff (like PGH)
+        if (currentPhase != DURING_JAMMING) {
+            TransitionToJammingPhase();
+        }
+        
+        NS_LOG_UNCOND(ns3::Simulator::Now().GetSeconds() << "s: [CR-ED] Reactive detection");
+        NS_LOG_UNCOND("   Closest node: " << closestNode << " at " << minDist << "m from jammer");
+        NS_LOG_UNCOND("   Detection threshold: " << crEdDetectRange << "m");
+        
+        // Execute handoff with realistic delays (same as PGH)
         ExecuteHandoff("CR-ED");
         return;
     }
@@ -36,6 +54,7 @@ void CrEdLoop()
 }
 
 // CR-SCAN: Periodic scanning loop
+// IMPROVED: Now includes phase transition like PGH
 void CrScanLoop()
 {
     if (actionTaken) return;
@@ -48,6 +67,11 @@ void CrScanLoop()
         minDist = std::min(minDist, GetDistance(fanetNodes.Get(i), puNode));
     }
     if (minDist < crScanRange) {
+        // Transition to jamming phase BEFORE handoff (like PGH)
+        if (currentPhase != DURING_JAMMING) {
+            TransitionToJammingPhase();
+        }
+        
         NS_LOG_UNCOND(ns3::Simulator::Now().GetSeconds() << "s: [CR-SCAN] Scan trigger at " << minDist << " m");
         ExecuteHandoff("CR-SCAN");
         return;
@@ -56,6 +80,7 @@ void CrScanLoop()
 }
 
 // CR-COOP: Cooperative sensing loop (quorum)
+// IMPROVED: Now includes phase transition like PGH
 void CrCoopLoop()
 {
     if (actionTaken) return;
@@ -71,6 +96,11 @@ void CrCoopLoop()
     }
     uint32_t quorum = std::max<uint32_t>(crCoopQuorum, std::max<uint32_t>(1, nNodes / 10));
     if (affected >= quorum) {
+        // Transition to jamming phase BEFORE handoff (like PGH)
+        if (currentPhase != DURING_JAMMING) {
+            TransitionToJammingPhase();
+        }
+        
         NS_LOG_UNCOND(ns3::Simulator::Now().GetSeconds() << "s: [CR-COOP] Quorum reached (" << affected << "/" << nNodes << " nodes affected)");
         ExecuteHandoff("CR-COOP");
         return;

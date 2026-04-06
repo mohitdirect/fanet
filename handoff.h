@@ -32,6 +32,11 @@ void FormClusters();
 void UpdateClusterMembership();
 uint32_t GetClusterHead(uint32_t nodeId);
 
+// Super-cluster (hierarchical) formation and management
+void FormSuperClusters();
+uint32_t GetSuperClusterHead(uint32_t nodeId);
+bool IsInSameSuperCluster(uint32_t nodeA, uint32_t nodeB);
+
 } // namespace myfanet
 
 #endif // MYFANET_HANDOFF_H

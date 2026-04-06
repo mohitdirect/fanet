@@ -18,9 +18,10 @@ ns3::Vector GetNodePosition(ns3::Ptr<ns3::Node> node) {
 }
 
 ns3::Vector GetNodeVelocity(ns3::Ptr<ns3::Node> node) {
-    ns3::Ptr<ns3::ConstantVelocityMobilityModel> cvm = 
-        node->GetObject<ns3::ConstantVelocityMobilityModel>();
-    return cvm ? cvm->GetVelocity() : ns3::Vector(0, 0, 0);
+    // Use base MobilityModel class - works with ALL mobility models
+    // including GaussMarkovMobilityModel, ConstantVelocityMobilityModel, etc.
+    ns3::Ptr<ns3::MobilityModel> mm = node->GetObject<ns3::MobilityModel>();
+    return mm ? mm->GetVelocity() : ns3::Vector(0, 0, 0);
 }
 
 } // namespace myfanet

@@ -42,6 +42,9 @@ double ComputeEnhancedLMSS(uint32_t nodeI, double commRange);
 // === Periodic Link History Cleanup ===
 void CleanupLinkHistories();
 
+// === Spatial Grid Update (call periodically) ===
+void UpdateSpatialGrid();
+
 } // namespace myfanet
 
 #endif // MYFANET_LMSS_H

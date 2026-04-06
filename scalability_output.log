@@ -1,0 +1,208 @@
+nohup: ignoring input
+======================================================================
+  FANET PROTOCOL SCALABILITY COMPARISON TEST
+======================================================================
+  Protocols: PGH, CR-ED, AODV, OLSR
+  Node counts: [6, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+  Runs per config: 3
+  Simulation time: 45s
+======================================================================
+
+==================================================
+  Testing with 6 nodes
+==================================================
+[  1/144] PGH   n=  6 run=1 (ETA: 0.0m)... T=0.45Mbps PDR=52.0% D=12.7ms
+[  2/144] PGH   n=  6 run=2 (ETA: 8.5m)... T=0.11Mbps PDR=12.6% D=12.1ms
+[  3/144] PGH   n=  6 run=3 (ETA: 12.8m)... T=0.60Mbps PDR=69.6% D=52.6ms
+[  4/144] CR-ED n=  6 run=1 (ETA: 20.3m)... T=0.26Mbps PDR=57.4% D=88.8ms
+[  5/144] CR-ED n=  6 run=2 (ETA: 18.6m)... T=0.29Mbps PDR=45.1% D=46.7ms
+[  6/144] CR-ED n=  6 run=3 (ETA: 18.4m)... T=0.14Mbps PDR=22.2% D=24.5ms
+[  7/144] AODV  n=  6 run=1 (ETA: 17.1m)... T=0.53Mbps PDR=60.6% D=41.9ms
+[  8/144] AODV  n=  6 run=2 (ETA: 17.6m)... T=0.47Mbps PDR=54.1% D=14.6ms
+[  9/144] AODV  n=  6 run=3 (ETA: 17.3m)... T=0.47Mbps PDR=54.4% D=41.4ms
+[ 10/144] OLSR  n=  6 run=1 (ETA: 17.0m)... T=0.49Mbps PDR=72.5% D=34.1ms
+[ 11/144] OLSR  n=  6 run=2 (ETA: 16.6m)... T=0.49Mbps PDR=66.9% D=24.4ms
+[ 12/144] OLSR  n=  6 run=3 (ETA: 16.4m)... T=0.20Mbps PDR=30.1% D=36.4ms
+
+==================================================
+  Testing with 10 nodes
+==================================================
+[ 13/144] PGH   n= 10 run=1 (ETA: 16.2m)... T=0.74Mbps PDR=52.5% D=46.7ms
+[ 14/144] PGH   n= 10 run=2 (ETA: 16.8m)... T=0.45Mbps PDR=31.7% D=312.5ms
+[ 15/144] PGH   n= 10 run=3 (ETA: 24.9m)... T=0.52Mbps PDR=36.7% D=28.8ms
+[ 16/144] CR-ED n= 10 run=1 (ETA: 25.1m)... T=0.48Mbps PDR=47.1% D=51.0ms
+[ 17/144] CR-ED n= 10 run=2 (ETA: 24.9m)... T=0.32Mbps PDR=47.5% D=9.5ms
+[ 18/144] CR-ED n= 10 run=3 (ETA: 24.1m)... T=0.39Mbps PDR=46.3% D=54.3ms
+[ 19/144] AODV  n= 10 run=1 (ETA: 23.6m)... T=0.47Mbps PDR=33.6% D=28.9ms
+[ 20/144] AODV  n= 10 run=2 (ETA: 23.2m)... T=0.68Mbps PDR=47.9% D=16.2ms
+[ 21/144] AODV  n= 10 run=3 (ETA: 23.2m)... T=0.57Mbps PDR=40.2% D=67.7ms
+[ 22/144] OLSR  n= 10 run=1 (ETA: 22.8m)... T=0.39Mbps PDR=45.5% D=39.8ms
+[ 23/144] OLSR  n= 10 run=2 (ETA: 22.6m)... T=0.41Mbps PDR=59.3% D=15.7ms
+[ 24/144] OLSR  n= 10 run=3 (ETA: 22.2m)... T=0.46Mbps PDR=48.4% D=60.7ms
+
+==================================================
+  Testing with 15 nodes
+==================================================
+[ 25/144] PGH   n= 15 run=1 (ETA: 22.2m)... T=0.98Mbps PDR=48.1% D=30.4ms
+[ 26/144] PGH   n= 15 run=2 (ETA: 23.4m)... T=0.76Mbps PDR=37.3% D=28.3ms
+[ 27/144] PGH   n= 15 run=3 (ETA: 23.7m)... T=0.67Mbps PDR=32.9% D=58.8ms
+[ 28/144] CR-ED n= 15 run=1 (ETA: 23.9m)... T=0.63Mbps PDR=37.0% D=60.9ms
+[ 29/144] CR-ED n= 15 run=2 (ETA: 24.0m)... T=0.51Mbps PDR=28.7% D=60.1ms
+[ 30/144] CR-ED n= 15 run=3 (ETA: 23.7m)... T=0.53Mbps PDR=34.1% D=43.9ms
+[ 31/144] AODV  n= 15 run=1 (ETA: 23.3m)... T=0.70Mbps PDR=34.2% D=66.4ms
+[ 32/144] AODV  n= 15 run=2 (ETA: 23.6m)... T=0.68Mbps PDR=33.5% D=72.8ms
+[ 33/144] AODV  n= 15 run=3 (ETA: 23.6m)... T=0.78Mbps PDR=38.4% D=44.7ms
+[ 34/144] OLSR  n= 15 run=1 (ETA: 23.8m)... T=0.59Mbps PDR=34.4% D=41.9ms
+[ 35/144] OLSR  n= 15 run=2 (ETA: 23.7m)... T=0.27Mbps PDR=17.4% D=51.5ms
+[ 36/144] OLSR  n= 15 run=3 (ETA: 23.4m)... T=0.43Mbps PDR=34.7% D=56.1ms
+
+==================================================
+  Testing with 20 nodes
+==================================================
+[ 37/144] PGH   n= 20 run=1 (ETA: 23.1m)... T=0.91Mbps PDR=34.9% D=108.8ms
+[ 38/144] PGH   n= 20 run=2 (ETA: 24.4m)... T=0.86Mbps PDR=32.8% D=118.9ms
+[ 39/144] PGH   n= 20 run=3 (ETA: 26.3m)... T=1.27Mbps PDR=48.7% D=43.4ms
+[ 40/144] CR-ED n= 20 run=1 (ETA: 26.9m)... T=0.65Mbps PDR=29.9% D=62.5ms
+[ 41/144] CR-ED n= 20 run=2 (ETA: 26.9m)... T=1.05Mbps PDR=48.2% D=39.9ms
+[ 42/144] CR-ED n= 20 run=3 (ETA: 26.7m)... T=0.60Mbps PDR=28.7% D=60.0ms
+[ 43/144] AODV  n= 20 run=1 (ETA: 26.5m)... T=1.22Mbps PDR=46.6% D=127.8ms
+[ 44/144] AODV  n= 20 run=2 (ETA: 27.0m)... T=1.01Mbps PDR=38.6% D=81.9ms
+[ 45/144] AODV  n= 20 run=3 (ETA: 27.1m)... T=0.74Mbps PDR=28.4% D=52.4ms
+[ 46/144] OLSR  n= 20 run=1 (ETA: 27.3m)... T=0.83Mbps PDR=39.5% D=86.3ms
+[ 47/144] OLSR  n= 20 run=2 (ETA: 27.2m)... T=0.56Mbps PDR=27.6% D=111.5ms
+[ 48/144] OLSR  n= 20 run=3 (ETA: 26.9m)... T=0.59Mbps PDR=29.7% D=65.9ms
+
+==================================================
+  Testing with 30 nodes
+==================================================
+[ 49/144] PGH   n= 30 run=1 (ETA: 26.8m)... T=1.41Mbps PDR=39.0% D=79.1ms
+[ 50/144] PGH   n= 30 run=2 (ETA: 27.9m)... T=1.13Mbps PDR=31.2% D=80.9ms
+[ 51/144] PGH   n= 30 run=3 (ETA: 28.4m)... T=1.28Mbps PDR=35.4% D=83.0ms
+[ 52/144] CR-ED n= 30 run=1 (ETA: 29.1m)... T=1.22Mbps PDR=38.3% D=74.3ms
+[ 53/144] CR-ED n= 30 run=2 (ETA: 29.3m)... T=0.78Mbps PDR=26.0% D=89.8ms
+[ 54/144] CR-ED n= 30 run=3 (ETA: 29.3m)... T=0.56Mbps PDR=19.0% D=162.6ms
+[ 55/144] AODV  n= 30 run=1 (ETA: 29.2m)... T=0.82Mbps PDR=22.7% D=99.9ms
+[ 56/144] AODV  n= 30 run=2 (ETA: 29.5m)... T=0.80Mbps PDR=22.0% D=97.8ms
+[ 57/144] AODV  n= 30 run=3 (ETA: 29.9m)... T=0.43Mbps PDR=11.8% D=333.0ms
+[ 58/144] OLSR  n= 30 run=1 (ETA: 30.1m)... T=0.97Mbps PDR=33.5% D=81.8ms
+[ 59/144] OLSR  n= 30 run=2 (ETA: 30.1m)... T=0.88Mbps PDR=29.7% D=77.9ms
+[ 60/144] OLSR  n= 30 run=3 (ETA: 29.8m)... T=0.95Mbps PDR=30.4% D=106.3ms
+
+==================================================
+  Testing with 40 nodes
+==================================================
+[ 61/144] PGH   n= 40 run=1 (ETA: 29.7m)... T=0.70Mbps PDR=15.8% D=191.4ms
+[ 62/144] PGH   n= 40 run=2 (ETA: 30.0m)... T=0.98Mbps PDR=22.1% D=98.4ms
+[ 63/144] PGH   n= 40 run=3 (ETA: 30.8m)... T=1.28Mbps PDR=28.8% D=117.2ms
+[ 64/144] CR-ED n= 40 run=1 (ETA: 31.6m)... T=1.07Mbps PDR=28.7% D=93.7ms
+[ 65/144] CR-ED n= 40 run=2 (ETA: 31.7m)... T=1.05Mbps PDR=30.1% D=112.8ms
+[ 66/144] CR-ED n= 40 run=3 (ETA: 31.7m)... T=0.99Mbps PDR=26.5% D=80.1ms
+[ 67/144] AODV  n= 40 run=1 (ETA: 31.9m)... T=0.69Mbps PDR=15.5% D=167.1ms
+[ 68/144] AODV  n= 40 run=2 (ETA: 32.5m)... T=0.82Mbps PDR=18.5% D=166.9ms
+[ 69/144] AODV  n= 40 run=3 (ETA: 32.7m)... T=0.72Mbps PDR=16.4% D=172.7ms
+[ 70/144] OLSR  n= 40 run=1 (ETA: 33.2m)... T=1.43Mbps PDR=37.5% D=87.0ms
+[ 71/144] OLSR  n= 40 run=2 (ETA: 33.2m)... T=0.98Mbps PDR=29.2% D=109.9ms
+[ 72/144] OLSR  n= 40 run=3 (ETA: 33.0m)... T=1.03Mbps PDR=30.5% D=136.3ms
+
+==================================================
+  Testing with 50 nodes
+==================================================
+[ 73/144] PGH   n= 50 run=1 (ETA: 32.8m)... T=1.41Mbps PDR=28.1% D=134.2ms
+[ 74/144] PGH   n= 50 run=2 (ETA: 33.3m)... T=1.16Mbps PDR=23.1% D=155.1ms
+[ 75/144] PGH   n= 50 run=3 (ETA: 33.4m)... T=1.36Mbps PDR=27.1% D=85.6ms
+[ 76/144] CR-ED n= 50 run=1 (ETA: 33.7m)... T=0.64Mbps PDR=16.7% D=172.9ms
+[ 77/144] CR-ED n= 50 run=2 (ETA: 33.5m)... T=1.33Mbps PDR=30.8% D=118.7ms
+[ 78/144] CR-ED n= 50 run=3 (ETA: 33.5m)... T=1.18Mbps PDR=31.2% D=140.3ms
+[ 79/144] AODV  n= 50 run=1 (ETA: 33.4m)... T=0.76Mbps PDR=15.0% D=222.0ms
+[ 80/144] AODV  n= 50 run=2 (ETA: 33.6m)... T=0.71Mbps PDR=14.2% D=217.3ms
+[ 81/144] AODV  n= 50 run=3 (ETA: 33.9m)... T=0.43Mbps PDR=8.5% D=192.4ms
+[ 82/144] OLSR  n= 50 run=1 (ETA: 34.2m)... T=1.32Mbps PDR=33.2% D=98.7ms
+[ 83/144] OLSR  n= 50 run=2 (ETA: 33.9m)... T=1.19Mbps PDR=29.4% D=137.4ms
+[ 84/144] OLSR  n= 50 run=3 (ETA: 33.7m)... T=0.80Mbps PDR=19.6% D=155.2ms
+
+==================================================
+  Testing with 60 nodes
+==================================================
+[ 85/144] PGH   n= 60 run=1 (ETA: 33.4m)... T=1.47Mbps PDR=27.0% D=125.9ms
+[ 86/144] PGH   n= 60 run=2 (ETA: 34.5m)... T=1.24Mbps PDR=22.9% D=143.9ms
+[ 87/144] PGH   n= 60 run=3 (ETA: 34.7m)... T=1.58Mbps PDR=29.2% D=122.1ms
+[ 88/144] CR-ED n= 60 run=1 (ETA: 34.9m)... T=0.77Mbps PDR=17.9% D=165.6ms
+[ 89/144] CR-ED n= 60 run=2 (ETA: 34.5m)... T=0.95Mbps PDR=21.9% D=136.2ms
+[ 90/144] CR-ED n= 60 run=3 (ETA: 34.2m)... T=0.77Mbps PDR=17.6% D=184.0ms
+[ 91/144] AODV  n= 60 run=1 (ETA: 33.9m)... T=0.79Mbps PDR=14.5% D=252.5ms
+[ 92/144] AODV  n= 60 run=2 (ETA: 33.9m)... T=0.66Mbps PDR=12.2% D=227.6ms
+[ 93/144] AODV  n= 60 run=3 (ETA: 33.8m)... T=0.67Mbps PDR=12.3% D=222.2ms
+[ 94/144] OLSR  n= 60 run=1 (ETA: 33.9m)... T=1.16Mbps PDR=27.1% D=121.4ms
+[ 95/144] OLSR  n= 60 run=2 (ETA: 33.4m)... T=1.02Mbps PDR=22.9% D=134.2ms
+[ 96/144] OLSR  n= 60 run=3 (ETA: 33.0m)... T=0.95Mbps PDR=22.1% D=139.9ms
+
+==================================================
+  Testing with 70 nodes
+==================================================
+[ 97/144] PGH   n= 70 run=1 (ETA: 32.5m)... T=0.97Mbps PDR=17.2% D=185.9ms
+[ 98/144] PGH   n= 70 run=2 (ETA: 32.5m)... T=1.40Mbps PDR=24.8% D=119.3ms
+[ 99/144] PGH   n= 70 run=3 (ETA: 32.4m)... T=1.26Mbps PDR=22.4% D=131.4ms
+[100/144] CR-ED n= 70 run=1 (ETA: 32.3m)... T=0.72Mbps PDR=17.9% D=191.9ms
+[101/144] CR-ED n= 70 run=2 (ETA: 31.8m)... T=1.03Mbps PDR=22.3% D=149.6ms
+[102/144] CR-ED n= 70 run=3 (ETA: 31.3m)... T=1.06Mbps PDR=24.1% D=147.1ms
+[103/144] AODV  n= 70 run=1 (ETA: 30.8m)... T=0.59Mbps PDR=10.5% D=147.8ms
+[104/144] AODV  n= 70 run=2 (ETA: 30.6m)... T=0.63Mbps PDR=11.1% D=149.7ms
+[105/144] AODV  n= 70 run=3 (ETA: 30.3m)... T=0.79Mbps PDR=14.1% D=198.0ms
+[106/144] OLSR  n= 70 run=1 (ETA: 30.0m)... T=0.65Mbps PDR=15.0% D=233.1ms
+[107/144] OLSR  n= 70 run=2 (ETA: 29.4m)... T=0.76Mbps PDR=16.6% D=175.7ms
+[108/144] OLSR  n= 70 run=3 (ETA: 28.7m)... T=0.87Mbps PDR=18.7% D=170.0ms
+
+==================================================
+  Testing with 80 nodes
+==================================================
+[109/144] PGH   n= 80 run=1 (ETA: 28.1m)... T=1.28Mbps PDR=22.7% D=126.0ms
+[110/144] PGH   n= 80 run=2 (ETA: 27.9m)... T=0.95Mbps PDR=16.8% D=223.9ms
+[111/144] PGH   n= 80 run=3 (ETA: 27.5m)... T=1.01Mbps PDR=18.0% D=168.6ms
+[112/144] CR-ED n= 80 run=1 (ETA: 27.1m)... T=0.70Mbps PDR=15.1% D=175.0ms
+[113/144] CR-ED n= 80 run=2 (ETA: 26.4m)... T=0.88Mbps PDR=19.2% D=176.0ms
+[114/144] CR-ED n= 80 run=3 (ETA: 25.7m)... T=0.94Mbps PDR=20.8% D=173.5ms
+[115/144] AODV  n= 80 run=1 (ETA: 25.1m)... T=0.74Mbps PDR=13.1% D=159.2ms
+[116/144] AODV  n= 80 run=2 (ETA: 24.6m)... T=0.73Mbps PDR=12.9% D=144.2ms
+[117/144] AODV  n= 80 run=3 (ETA: 24.1m)... T=0.49Mbps PDR=8.7% D=328.5ms
+[118/144] OLSR  n= 80 run=1 (ETA: 23.7m)... T=0.93Mbps PDR=21.4% D=152.1ms
+[119/144] OLSR  n= 80 run=2 (ETA: 22.9m)... T=0.87Mbps PDR=20.1% D=188.0ms
+[120/144] OLSR  n= 80 run=3 (ETA: 22.1m)... T=1.33Mbps PDR=27.8% D=142.9ms
+
+==================================================
+  Testing with 90 nodes
+==================================================
+[121/144] PGH   n= 90 run=1 (ETA: 21.3m)... T=0.99Mbps PDR=18.2% D=195.1ms
+[122/144] PGH   n= 90 run=2 (ETA: 20.7m)... T=1.12Mbps PDR=20.7% D=199.8ms
+[123/144] PGH   n= 90 run=3 (ETA: 20.1m)... T=0.97Mbps PDR=17.8% D=169.3ms
+[124/144] CR-ED n= 90 run=1 (ETA: 19.4m)... T=0.63Mbps PDR=14.8% D=235.4ms
+[125/144] CR-ED n= 90 run=2 (ETA: 18.5m)... T=0.88Mbps PDR=19.4% D=184.8ms
+[126/144] CR-ED n= 90 run=3 (ETA: 17.7m)... T=0.83Mbps PDR=19.9% D=175.0ms
+[127/144] AODV  n= 90 run=1 (ETA: 16.8m)... T=0.36Mbps PDR=6.7% D=196.3ms
+[128/144] AODV  n= 90 run=2 (ETA: 16.1m)... T=0.59Mbps PDR=10.9% D=152.1ms
+[129/144] AODV  n= 90 run=3 (ETA: 15.3m)... T=0.54Mbps PDR=10.0% D=208.5ms
+[130/144] OLSR  n= 90 run=1 (ETA: 14.5m)... T=0.73Mbps PDR=16.3% D=185.4ms
+[131/144] OLSR  n= 90 run=2 (ETA: 13.6m)... T=0.98Mbps PDR=24.4% D=147.4ms
+[132/144] OLSR  n= 90 run=3 (ETA: 12.6m)... T=0.81Mbps PDR=19.2% D=157.5ms
+
+==================================================
+  Testing with 100 nodes
+==================================================
+[133/144] PGH   n=100 run=1 (ETA: 11.6m)... T=0.91Mbps PDR=18.1% D=191.9ms
+[134/144] PGH   n=100 run=2 (ETA: 10.7m)... T=0.63Mbps PDR=12.6% D=224.0ms
+[135/144] PGH   n=100 run=3 (ETA: 9.7m)... T=0.91Mbps PDR=18.2% D=180.7ms
+[136/144] CR-ED n=100 run=1 (ETA: 8.8m)... T=0.70Mbps PDR=16.9% D=240.3ms
+[137/144] CR-ED n=100 run=2 (ETA: 7.7m)... T=0.85Mbps PDR=20.7% D=206.0ms
+[138/144] CR-ED n=100 run=3 (ETA: 6.7m)... T=0.79Mbps PDR=19.6% D=217.7ms
+[139/144] AODV  n=100 run=1 (ETA: 5.6m)... T=0.30Mbps PDR=5.9% D=192.9ms
+[140/144] AODV  n=100 run=2 (ETA: 4.5m)... T=0.33Mbps PDR=6.6% D=196.7ms
+[141/144] AODV  n=100 run=3 (ETA: 3.5m)... T=0.54Mbps PDR=10.7% D=129.4ms
+[142/144] OLSR  n=100 run=1 (ETA: 2.3m)... T=0.79Mbps PDR=23.2% D=210.0ms
+[143/144] OLSR  n=100 run=2 (ETA: 1.2m)... T=0.89Mbps PDR=22.7% D=216.5ms
+[144/144] OLSR  n=100 run=3 (ETA: 0.0m)... T=0.78Mbps PDR=19.6% D=164.6ms
+
+Results saved to: /home/mohit/ns-allinone-3.43/ns-3.43/scratch/myfanet/scalability_test_results.csv
+Graph saved to: /home/mohit/ns-allinone-3.43/ns-3.43/scratch/myfanet/scalability_comparison.png
+
+======================================================================
+  TESTING COMPLETE! Total time: 172.4 minutes
+======================================================================

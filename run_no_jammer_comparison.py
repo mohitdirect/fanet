@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Protocol Comparison Test Script — Checkpoint-based Parallel Execution
-Runs PGH, GPSR, CBRP, CR-ED, AODV, OLSR across 10-100 nodes (step 2).
+No-Jammer Protocol Comparison — Baseline Performance Test
+Runs PGH, GPSR, CBRP, CR-ED, AODV, OLSR across 10-100 nodes (step 2)
+WITHOUT any jamming, to establish a clean baseline for comparison.
 
-Features:
-- 5 seeds per configuration for statistical significance
-- Checkpoint/resume: skips already-completed runs (survives power failure)
-- Multiprocessing: all seeds × protocols for a given node count run in parallel
-- Graphs updated after EVERY node count batch (no data lost between iterations)
-- 4 metric graphs: Throughput, PDR, End-to-End Delay, Jitter
-- All output written to a dedicated results/ folder
+Identical behaviour to run_comparison_tests.py:
+- 5 seeds per configuration
+- Checkpoint/resume (survives power failures)
+- Multiprocessing per node-count batch
+- Graphs updated after every node batch
+- 4 metrics: Throughput, PDR, End-to-End Delay, Jitter
+- Results saved to results/no_jammer/
 """
 
 import multiprocessing
@@ -27,17 +28,19 @@ from dataclasses import dataclass, field
 # ─── Configuration ────────────────────────────────────────────────────────────
 NS3_DIR        = "/home/mohit/ns-allinone-3.43/ns-3.43"
 SCRIPT_DIR     = os.path.dirname(os.path.abspath(__file__))
-RESULTS_DIR    = os.path.join(SCRIPT_DIR, "results")
+RESULTS_DIR    = os.path.join(SCRIPT_DIR, "results", "no_jammer")
 
 PROTOCOLS      = ["pgh", "gpsr", "cbrp", "cr-ed", "aodv", "olsr"]
 NODE_RANGE     = range(10, 102, 2)   # 10, 12, 14, ..., 100
 TRAFFIC_MODE   = "cluster"
 DETECTION_MODE = "hybrid"
+
+# Jammer is effectively disabled by pushing start time far beyond sim end
 JAMMER_MODE    = "static"
+JAMMER_START   = 9999   # Never activates
 
 # Timing
 SIM_TIME       = 30
-JAMMER_START   = 15
 
 # Statistical
 RUNS_PER_CONFIG = 5
@@ -45,54 +48,51 @@ TEST_SEEDS      = [3, 7, 42, 123, 999]
 
 # Plot style
 COLORS = {
-    'pgh':   '#2ecc71',   # Green
-    'gpsr':  '#f39c12',   # Orange
-    'cbrp':  '#1abc9c',   # Teal
-    'cr-ed': '#3498db',   # Blue
-    'aodv':  '#e74c3c',   # Red
-    'olsr':  '#9b59b6',   # Purple
+    'pgh':   '#2ecc71',
+    'gpsr':  '#f39c12',
+    'cbrp':  '#1abc9c',
+    'cr-ed': '#3498db',
+    'aodv':  '#e74c3c',
+    'olsr':  '#9b59b6',
 }
 MARKERS = {
     'pgh':   'o',
-    'gpsr':  'p',   # Pentagon
-    'cbrp':  'h',   # Hexagon
-    'cr-ed': 's',   # Square
-    'aodv':  '^',   # Triangle
-    'olsr':  'd',   # Diamond
+    'gpsr':  'p',
+    'cbrp':  'h',
+    'cr-ed': 's',
+    'aodv':  '^',
+    'olsr':  'd',
 }
 # ──────────────────────────────────────────────────────────────────────────────
 
 
 @dataclass
 class SimulationResult:
-    protocol:       str   = ""
-    nodes:          int   = 0
-    run:            int   = 0
-    throughput:     float = 0.0
-    pdr:            float = 0.0
-    detection_time: float = -1.0
-    delay:          float = 0.0
-    jitter:         float = 0.0
+    protocol:   str   = ""
+    nodes:      int   = 0
+    run:        int   = 0
+    throughput: float = 0.0
+    pdr:        float = 0.0
+    delay:      float = 0.0
+    jitter:     float = 0.0
 
 
 @dataclass
 class AggregatedResult:
-    throughput_mean:      float = 0.0
-    throughput_std:       float = 0.0
-    pdr_mean:             float = 0.0
-    pdr_std:              float = 0.0
-    delay_mean:           float = 0.0
-    delay_std:            float = 0.0
-    jitter_mean:          float = 0.0
-    jitter_std:           float = 0.0
-    detection_time_mean:  float = -1.0
-    detection_time_std:   float = 0.0
+    throughput_mean: float = 0.0
+    throughput_std:  float = 0.0
+    pdr_mean:        float = 0.0
+    pdr_std:         float = 0.0
+    delay_mean:      float = 0.0
+    delay_std:       float = 0.0
+    jitter_mean:     float = 0.0
+    jitter_std:      float = 0.0
     runs: List[SimulationResult] = field(default_factory=list)
 
 
 # ─── Simulation runner ────────────────────────────────────────────────────────
 def run_simulation(args: Tuple[str, int, int]) -> SimulationResult:
-    """Run a single NS-3 simulation and parse all metrics from stdout/stderr."""
+    """Run a single NS-3 simulation (no jammer) and parse metrics."""
     protocol, num_nodes, run = args
     seed = TEST_SEEDS[run % len(TEST_SEEDS)]
 
@@ -132,10 +132,6 @@ def run_simulation(args: Tuple[str, int, int]) -> SimulationResult:
         if m:
             result.pdr = float(m.group(1))
 
-        m = re.search(r'Jammer Detection Time:\s*([\d.]+)\s*s', output)
-        if m:
-            result.detection_time = float(m.group(1))
-
         m = re.search(r'Avg End-to-End Delay.*?:\s*([\d.]+)\s*s', output)
         if m:
             result.delay = float(m.group(1))
@@ -152,50 +148,39 @@ def run_simulation(args: Tuple[str, int, int]) -> SimulationResult:
 
 # ─── Aggregation ──────────────────────────────────────────────────────────────
 def aggregate_results(run_list: List[SimulationResult]) -> AggregatedResult:
-    """Compute mean ± std for all metrics across a list of runs."""
-    throughputs     = [r.throughput     for r in run_list]
-    pdrs            = [r.pdr            for r in run_list]
-    delays          = [r.delay          for r in run_list]
-    jitters         = [r.jitter         for r in run_list]
-    det_times       = [r.detection_time for r in run_list if r.detection_time >= 0]
-
     agg = AggregatedResult()
-    agg.runs              = run_list
-    agg.throughput_mean   = float(np.mean(throughputs))
-    agg.throughput_std    = float(np.std(throughputs))
-    agg.pdr_mean          = float(np.mean(pdrs))
-    agg.pdr_std           = float(np.std(pdrs))
-    agg.delay_mean        = float(np.mean(delays))
-    agg.delay_std         = float(np.std(delays))
-    agg.jitter_mean       = float(np.mean(jitters))
-    agg.jitter_std        = float(np.std(jitters))
-    if det_times:
-        agg.detection_time_mean = float(np.mean(det_times))
-        agg.detection_time_std  = float(np.std(det_times))
+    agg.runs             = run_list
+    agg.throughput_mean  = float(np.mean([r.throughput for r in run_list]))
+    agg.throughput_std   = float(np.std ([r.throughput for r in run_list]))
+    agg.pdr_mean         = float(np.mean([r.pdr        for r in run_list]))
+    agg.pdr_std          = float(np.std ([r.pdr        for r in run_list]))
+    agg.delay_mean       = float(np.mean([r.delay      for r in run_list]))
+    agg.delay_std        = float(np.std ([r.delay      for r in run_list]))
+    agg.jitter_mean      = float(np.mean([r.jitter     for r in run_list]))
+    agg.jitter_std       = float(np.std ([r.jitter     for r in run_list]))
     return agg
 
 
-# ─── Checkpoint helpers ───────────────────────────────────────────────────────
+# ─── File paths ───────────────────────────────────────────────────────────────
 def detailed_csv_path() -> str:
-    return os.path.join(RESULTS_DIR, "protocol_comparison_detailed.csv")
+    return os.path.join(RESULTS_DIR, "no_jammer_detailed.csv")
 
 def summary_csv_path() -> str:
-    return os.path.join(RESULTS_DIR, "protocol_comparison_results.csv")
+    return os.path.join(RESULTS_DIR, "no_jammer_results.csv")
 
 def graph_path() -> str:
-    return os.path.join(RESULTS_DIR, "protocol_comparison_graph.png")
+    return os.path.join(RESULTS_DIR, "no_jammer_graph.png")
 
 
+# ─── Checkpoint ───────────────────────────────────────────────────────────────
 def load_checkpoints() -> Set[Tuple[str, int, int]]:
-    """Return set of (protocol, nodes, run) already saved to detailed CSV."""
     completed: Set[Tuple[str, int, int]] = set()
     path = detailed_csv_path()
     if not os.path.exists(path):
         return completed
     try:
         with open(path, 'r') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
+            for row in csv.DictReader(f):
                 completed.add((row['Protocol'], int(row['Nodes']), int(row['Run'])))
         print(f"[Checkpoint] Loaded {len(completed)} existing results.")
     except Exception as e:
@@ -204,51 +189,40 @@ def load_checkpoints() -> Set[Tuple[str, int, int]]:
 
 
 def append_results_to_csv(results: List[SimulationResult]):
-    """Append a batch of results to the detailed CSV (creates header if needed)."""
     path = detailed_csv_path()
     write_header = not os.path.exists(path)
     with open(path, 'a', newline='') as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow([
-                "Nodes", "Protocol", "Run",
-                "Throughput", "PDR", "Detection_Time",
-                "Delay", "Jitter"
-            ])
+            writer.writerow(["Nodes", "Protocol", "Run",
+                             "Throughput", "PDR", "Delay", "Jitter"])
         for r in results:
             writer.writerow([
                 r.nodes, r.protocol, r.run,
-                f"{r.throughput:.4f}",
-                f"{r.pdr:.2f}",
-                f"{r.detection_time:.4f}" if r.detection_time >= 0 else "N/A",
-                f"{r.delay:.6f}",
-                f"{r.jitter:.6f}",
+                f"{r.throughput:.4f}", f"{r.pdr:.2f}",
+                f"{r.delay:.6f}",     f"{r.jitter:.6f}",
             ])
 
 
-# ─── CSV reading & aggregation of all saved data ─────────────────────────────
+# ─── Re-aggregate from CSV ────────────────────────────────────────────────────
 def read_all_results() -> Dict[str, Dict[int, AggregatedResult]]:
-    """Re-read the detailed CSV and aggregate per (protocol, nodes)."""
     flat: List[SimulationResult] = []
     path = detailed_csv_path()
     if not os.path.exists(path):
         return {p: {} for p in PROTOCOLS}
 
     with open(path, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
+        for row in csv.DictReader(f):
             try:
-                r = SimulationResult(
-                    protocol       = row['Protocol'],
-                    nodes          = int(row['Nodes']),
-                    run            = int(row['Run']),
-                    throughput     = float(row['Throughput']),
-                    pdr            = float(row['PDR']),
-                    detection_time = float(row['Detection_Time']) if row['Detection_Time'] != 'N/A' else -1.0,
-                    delay          = float(row['Delay']),
-                    jitter         = float(row.get('Jitter', 0)),
-                )
-                flat.append(r)
+                flat.append(SimulationResult(
+                    protocol   = row['Protocol'],
+                    nodes      = int(row['Nodes']),
+                    run        = int(row['Run']),
+                    throughput = float(row['Throughput']),
+                    pdr        = float(row['PDR']),
+                    delay      = float(row['Delay']),
+                    jitter     = float(row.get('Jitter', 0)),
+                ))
             except Exception:
                 pass
 
@@ -269,38 +243,31 @@ def read_all_results() -> Dict[str, Dict[int, AggregatedResult]]:
 
 
 def save_summary_csv(final: Dict[str, Dict[int, AggregatedResult]]):
-    """Overwrite the summary CSV with freshly aggregated stats."""
     with open(summary_csv_path(), 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([
-            "Nodes", "Protocol",
-            "Throughput_Mean", "Throughput_Std",
-            "PDR_Mean", "PDR_Std",
-            "Delay_Mean", "Delay_Std",
-            "Jitter_Mean", "Jitter_Std",
-            "Detection_Time_Mean", "Detection_Time_Std",
-        ])
+        writer.writerow(["Nodes", "Protocol",
+                         "Throughput_Mean", "Throughput_Std",
+                         "PDR_Mean",        "PDR_Std",
+                         "Delay_Mean",      "Delay_Std",
+                         "Jitter_Mean",     "Jitter_Std"])
         for p in PROTOCOLS:
             for n in sorted(final[p].keys()):
                 agg = final[p][n]
                 writer.writerow([
                     n, p,
-                    f"{agg.throughput_mean:.4f}",   f"{agg.throughput_std:.4f}",
-                    f"{agg.pdr_mean:.2f}",           f"{agg.pdr_std:.2f}",
-                    f"{agg.delay_mean:.6f}",         f"{agg.delay_std:.6f}",
-                    f"{agg.jitter_mean:.6f}",        f"{agg.jitter_std:.6f}",
-                    f"{agg.detection_time_mean:.4f}" if agg.detection_time_mean >= 0 else "N/A",
-                    f"{agg.detection_time_std:.4f}"  if agg.detection_time_mean >= 0 else "N/A",
+                    f"{agg.throughput_mean:.4f}", f"{agg.throughput_std:.4f}",
+                    f"{agg.pdr_mean:.2f}",        f"{agg.pdr_std:.2f}",
+                    f"{agg.delay_mean:.6f}",      f"{agg.delay_std:.6f}",
+                    f"{agg.jitter_mean:.6f}",     f"{agg.jitter_std:.6f}",
                 ])
 
 
 # ─── Plotting ─────────────────────────────────────────────────────────────────
 def plot_graphs(final: Dict[str, Dict[int, AggregatedResult]]):
-    """Plot 4-metric comparison graph and save to results/."""
     fig, axes = plt.subplots(2, 2, figsize=(16, 13))
     fig.suptitle(
-        'FANET Protocol Comparison (10–100 Nodes, 5 Seeds)',
-        fontsize=16, fontweight='bold', y=1.01
+        'FANET Protocol Comparison — No Jammer Baseline (10–100 Nodes, 5 Seeds)',
+        fontsize=15, fontweight='bold', y=1.01
     )
 
     def _draw(ax, metric_fn, title, ylabel, ylim=None):
@@ -308,11 +275,7 @@ def plot_graphs(final: Dict[str, Dict[int, AggregatedResult]]):
             nodes = sorted(final[p].keys())
             if not nodes:
                 continue
-            means, stds = [], []
-            for n in nodes:
-                mean, std = metric_fn(final[p][n])
-                means.append(mean)
-                stds.append(std)
+            means, stds = zip(*[metric_fn(final[p][n]) for n in nodes])
             ax.errorbar(
                 nodes, means, yerr=stds,
                 marker=MARKERS[p], color=COLORS[p],
@@ -329,22 +292,22 @@ def plot_graphs(final: Dict[str, Dict[int, AggregatedResult]]):
 
     _draw(axes[0, 0],
           lambda a: (a.throughput_mean, a.throughput_std),
-          'Average Throughput vs Number of Nodes',
+          'Average Throughput vs Number of Nodes (No Jammer)',
           'Throughput (Mbps)')
 
     _draw(axes[0, 1],
           lambda a: (a.pdr_mean, a.pdr_std),
-          'Packet Delivery Ratio vs Number of Nodes',
+          'Packet Delivery Ratio vs Number of Nodes (No Jammer)',
           'PDR (%)', ylim=(0, 105))
 
     _draw(axes[1, 0],
-          lambda a: (a.delay_mean * 1000, a.delay_std * 1000),   # s → ms
-          'Average End-to-End Delay vs Number of Nodes',
+          lambda a: (a.delay_mean * 1000, a.delay_std * 1000),
+          'Average End-to-End Delay vs Number of Nodes (No Jammer)',
           'Delay (ms)')
 
     _draw(axes[1, 1],
-          lambda a: (a.jitter_mean * 1000, a.jitter_std * 1000), # s → ms
-          'Average Jitter vs Number of Nodes',
+          lambda a: (a.jitter_mean * 1000, a.jitter_std * 1000),
+          'Average Jitter vs Number of Nodes (No Jammer)',
           'Jitter (ms)')
 
     plt.tight_layout()
@@ -355,10 +318,8 @@ def plot_graphs(final: Dict[str, Dict[int, AggregatedResult]]):
 
 
 def refresh_plots():
-    """Re-aggregate from CSV and regenerate graph + summary CSV."""
     final = read_all_results()
-    has_data = any(final[p] for p in PROTOCOLS)
-    if not has_data:
+    if not any(final[p] for p in PROTOCOLS):
         return
     save_summary_csv(final)
     try:
@@ -372,19 +333,18 @@ def main():
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     print("=" * 65)
-    print("CHECKPOINT-PARALLEL PROTOCOL COMPARISON (10–100 Nodes, Step 2)")
+    print("NO-JAMMER BASELINE COMPARISON (10–100 Nodes, Step 2)")
     print(f"Protocols  : {', '.join(PROTOCOLS)}")
     print(f"Seeds      : {TEST_SEEDS}")
-    print(f"Sim time   : {SIM_TIME}s   Jammer at: {JAMMER_START}s")
+    print(f"Sim time   : {SIM_TIME}s   Jammer: DISABLED")
     print(f"Results dir: {RESULTS_DIR}")
     print("=" * 65)
 
-    completed = load_checkpoints()
-    num_cores = multiprocessing.cpu_count()
+    completed  = load_checkpoints()
+    num_cores  = multiprocessing.cpu_count()
     print(f"CPU cores available: {num_cores}\n")
 
     for nodes in NODE_RANGE:
-        # Build task list for this node count only
         node_tasks = [
             (proto, nodes, run)
             for proto in PROTOCOLS
@@ -402,8 +362,8 @@ def main():
         print(f"\n[Nodes={nodes:3d}] Running {len(node_tasks)} sims "
               f"(skipped {skipped} checkpointed) with {num_cores} workers...")
 
+        batch_results: List[SimulationResult] = []
         with multiprocessing.Pool(processes=num_cores) as pool:
-            batch_results: List[SimulationResult] = []
             for i, result in enumerate(pool.imap_unordered(run_simulation, node_tasks)):
                 batch_results.append(result)
                 completed.add((result.protocol, result.nodes, result.run))
@@ -417,16 +377,15 @@ def main():
                     f"Jitter={result.jitter*1000:.1f}ms"
                 )
 
-        # Persist this batch immediately
         append_results_to_csv(batch_results)
         print(f"[Nodes={nodes:3d}] CSV updated. Regenerating graphs...")
         refresh_plots()
 
     print("\n" + "=" * 65)
-    print("All simulations complete! Generating final graphs...")
+    print("No-jammer baseline sweep complete!")
     print("=" * 65)
     refresh_plots()
-    print(f"\nResults folder: {RESULTS_DIR}")
+    print(f"\nResults folder : {RESULTS_DIR}")
     print(f"  Detailed CSV : {detailed_csv_path()}")
     print(f"  Summary CSV  : {summary_csv_path()}")
     print(f"  Graph        : {graph_path()}")
